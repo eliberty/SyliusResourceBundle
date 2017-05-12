@@ -96,12 +96,9 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     protected function getConfigurationDefinition()
     {
         $definition = new Definition('Sylius\Bundle\ResourceBundle\Controller\Configuration');
-        $definition
-            ->setFactoryService('sylius.controller.configuration_factory')
-            ->setFactoryMethod('createConfiguration')
-            ->setArguments(array($this->prefix, $this->resourceName, $this->templates))
-            ->setPublic(false)
-        ;
+        $definition->setFactory([new Reference('sylius.controller.configuration_factory'),'createConfiguration'])
+        ->setArguments(array($this->prefix, $this->resourceName, $this->templates))
+        ->setPublic(false);
 
         return $definition;
     }
@@ -131,8 +128,7 @@ abstract class AbstractDatabaseDriver implements DatabaseDriverInterface
     {
         $definition = new Definition($this->getClassMetadataClassname());
         $definition
-            ->setFactoryService($this->getManagerServiceKey())
-            ->setFactoryMethod('getClassMetadata')
+            ->setFactory([new Reference($this->getManagerServiceKey()),'getClassMetadata'])
             ->setArguments(array($models))
             ->setPublic(false)
         ;
